@@ -1,12 +1,14 @@
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 from app import db
 from datetime import datetime
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(32), nullable=False)
+    username = db.Column(db.String(32))
+    email = db.Column(db.String(64), nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     add_time = db.Column(db.DateTime, default=datetime.now)
 
