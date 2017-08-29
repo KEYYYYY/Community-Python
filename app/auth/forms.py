@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email
 
 
@@ -12,5 +12,4 @@ class LoginForm(FlaskForm):
         DataRequired(message='这是必填字段'),
         Length(8, 32, message='请输入8-32位的密码')
     ])
-    remember_me = BooleanField('保持登录')
     submit = SubmitField('登录')

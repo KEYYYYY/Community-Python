@@ -1,8 +1,9 @@
+from datetime import datetime
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 from app import db
-from datetime import datetime
 
 
 class User(db.Model, UserMixin):
@@ -24,4 +25,4 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return '<User {0}>'.format(self.username)
+        return '<User {0}>'.format(self.email)

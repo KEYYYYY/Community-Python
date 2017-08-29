@@ -26,13 +26,23 @@
         <!--导航栏内容-->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-bolt" aria-hidden="true"></i> 登出</a></li>
+                {% else %}
                 <li><a href="{{ url_for('auth.login') }}"><i class="fa fa-user" aria-hidden="true"></i> 登录</a></li>
                 <li><a href="#"><i class="fa fa-plus" aria-hidden="true"></i> 注册</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </nav>
 <div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
     <div class="row">
         {% block content %}
         {% endblock %}

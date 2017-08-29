@@ -6,10 +6,10 @@
         <div class="page-header text-center">
             <h1>用户登录</h1>
         </div>
-        <form method="POST" action="#">
+        <form method="POST" action="{{ url_for('auth.login') }}">
             {{ login_form.hidden_tag() }}
             <div class="form-group">
-                {{ login_form.label }}
+                {{ login_form.email.label }}
                 {% if login_form.email.errors %}
                 {% for e in login_form.email.errors %}
                 <p class="text-danger">{{ e }}</p>
@@ -18,7 +18,7 @@
                 {{ login_form.email(class='form-control') }}
             </div>
             <div class="form-group">
-                {{ login_form.label }}
+                {{ login_form.password.label }}
                 {% if login_form.password.errors %}
                 {% for e in login_form.password.errors %}
                 <p class="text-danger">{{ e }}</p>
