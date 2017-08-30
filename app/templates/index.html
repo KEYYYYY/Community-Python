@@ -2,10 +2,12 @@
 {% block title %}首页{% endblock %}
 {% block content %}
 <div class="col-md-10 col-md-offset-1">
-    <div class="well">
-        <h3>Thumbnail label</h3>
-        <p>...</p>
-        <p><a href="#" class="btn btn-success" role="button">继续阅读</a></p>
+    <div class="page-header">
+        {% if current_user.is_authenticated %}
+        <h1>你好{{ current_user.username }}</h1>
+        {% else %}
+        <h1>请登录</h1>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

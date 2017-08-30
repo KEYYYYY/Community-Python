@@ -9,7 +9,7 @@
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse">
     <div class="container">
         <!--小尺寸设备图标-->
         <div class="navbar-header">
@@ -20,14 +20,35 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url_for('home.index') }}">博客</a>
+            <a class="navbar-brand" href="{{ url_for('home.index') }}"><i class="fa fa-code" aria-hidden="true"></i>
+                玩蛇社区</a>
         </div>
 
         <!--导航栏内容-->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-bolt" aria-hidden="true"></i> 登出</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> 增加 <span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">撰写博客</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><i class="fa fa-cog" aria-hidden="true"></i> 管理 <span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">{{ current_user.username }}</li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">个人信息</a></li>
+                        <li><a href="#">修改密码</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{{ url_for('auth.logout') }}">注销</a></li>
+                    </ul>
+                </li>
                 {% else %}
                 <li><a href="{{ url_for('auth.login') }}"><i class="fa fa-user" aria-hidden="true"></i> 登录</a></li>
                 <li><a href="{{ url_for('auth.register') }}"><i class="fa fa-plus" aria-hidden="true"></i> 注册</a></li>
@@ -39,7 +60,7 @@
 <div class="container">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <button type="button" class="close" data-dismiss="alert">&times</button>
         {{ message }}
     </div>
     {% endfor %}

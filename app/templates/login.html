@@ -6,7 +6,7 @@
         <div class="page-header text-center">
             <h1><i class="fa fa-user" aria-hidden="true"></i> 用户登录</h1>
         </div>
-        <form method="POST" action="{{ url_for('auth.login') }}">
+        <form method="POST">
             {{ login_form.hidden_tag() }}
             <div class="form-group">
                 {{ login_form.email.label }}
