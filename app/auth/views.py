@@ -60,7 +60,7 @@ def register():
 def confirm(token):
     if current_user.confirmed:
         flash('你已经激活过，无需重复激活')
-    if current_user.confirm(token):
+    elif current_user.confirm(token):
         flash('谢谢你加入我们')
     else:
         flash('链接失效')
@@ -73,3 +73,26 @@ def logout():
     logout_user()
     flash('登出成功')
     return redirect(url_for('auth.login'))
+
+
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated \
+            and not current_user.confirmed \
+            and request.endpoint[:4] != 'auth':
+        return redirect(url_for('auth.unconfirmed'))
+
+
+@auth.route('/unconfirmed/')
+def unconfirmed():
+    return render_template('unconfirmed.html')
+
+
+@auth.route('/resend/<category>')
+@login_required
+def resend_email(category):
+    token = current_user.generate_confirmation_token()
+    if category == 'confirm':
+        send_email(current_user.email, '请激活您的帐号', 'confirm.html', token=token)
+        flash('一封新的激活邮件已经发往你的邮箱')
+    return redirect(url_for('home.index'))

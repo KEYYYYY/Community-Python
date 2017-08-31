@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}请激活您的帐号{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>你好，{{ current_user.email }}</h1>
+</div>
+<p class="lead">感谢你注册了我们的社区，但是没有激活你的账户之前我们无法让你看到我们社区的内容</p>
+<p class="lead"><strong>请尽快去你的邮箱中激活你的帐号，谢谢</strong></p>
+<a href="{{ url_for('auth.resend_email', category='confirm') }}">点击这里再发送一封激活邮件</a>
+{% endblock %}

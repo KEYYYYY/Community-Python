@@ -6,7 +6,7 @@
         <div class="page-header text-center">
             <h1><i class="fa fa-plus" aria-hidden="true"></i> 用户注册</h1>
         </div>
-        <form method="POST" action="{{ url_for('auth.register') }}">
+        <form method="POST">
             {{ register_form.hidden_tag() }}
             <div class="form-group">
                 {{ register_form.email.label }}
