@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, login_required
 from flask_mail import Message
 from flask_login import current_user
 
-from app.auth.forms import LoginForm, RegisterForm
+from app.auth.forms import LoginForm, RegisterForm, ModifyPasswordForm
 from app.auth.modles import User
 from app import login_manager
 from app import db, mail
@@ -96,3 +96,19 @@ def resend_email(category):
         send_email(current_user.email, '请激活您的帐号', 'confirm.html', token=token)
         flash('一封新的激活邮件已经发往你的邮箱')
     return redirect(url_for('home.index'))
+
+
+@auth.route('/modify_password', methods=['GET', 'POST'])
+@login_required
+def modify_password():
+    modify_password_form = ModifyPasswordForm()
+    if modify_password_form.validate_on_submit():
+        if current_user.verify_password(modify_password_form.old_password.data):
+            current_user.password = modify_password_form.new_password.data
+            db.session.add(current_user)
+            db.session.commit()
+            flash('密码修改成功，请重新登录')
+            return redirect(url_for('auth.logout'))
+        else:
+            flash('旧密码输入错误')
+    return render_template('modify-password.html', modify_password_form=modify_password_form)

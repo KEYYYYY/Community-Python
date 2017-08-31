@@ -35,3 +35,20 @@ class RegisterForm(FlaskForm):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('邮箱已经注册')
+
+
+class ModifyPasswordForm(FlaskForm):
+    old_password = PasswordField('旧密码', validators=[
+        DataRequired(message='这是必填字段'),
+        Length(8, 32, message='请输入8-32位的密码')
+    ])
+    new_password = PasswordField('新密码', validators=[
+        DataRequired(message='这是必填字段'),
+        Length(8, 32, message='请输入8-32位的密码'),
+        EqualTo('new_password2', message='两次输入的密码不一致')
+    ])
+    new_password2 = PasswordField('重复新密码', validators=[
+        DataRequired(message='这是必填字段'),
+        Length(8, 32, message='请输入8-32位的密码'),
+    ])
+    submit = SubmitField('确认修改')
