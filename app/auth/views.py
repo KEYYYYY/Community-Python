@@ -88,7 +88,7 @@ def unconfirmed():
     return render_template('unconfirmed.html')
 
 
-@auth.route('/resend/<category>')
+@auth.route('/resend/<category>/')
 @login_required
 def resend_email(category):
     token = current_user.generate_confirmation_token()
@@ -98,7 +98,7 @@ def resend_email(category):
     return redirect(url_for('home.index'))
 
 
-@auth.route('/modify_password', methods=['GET', 'POST'])
+@auth.route('/modify_password/', methods=['GET', 'POST'])
 @login_required
 def modify_password():
     modify_password_form = ModifyPasswordForm()

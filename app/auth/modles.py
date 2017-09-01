@@ -1,6 +1,8 @@
 from datetime import datetime
+import hashlib
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import request
 from flask_login import UserMixin
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -12,7 +14,10 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32))
     email = db.Column(db.String(64), nullable=False)
+    location = db.Column(db.String(256), default='中国')
+    about_me = db.Column(db.Text)
     password_hash = db.Column(db.String(128), nullable=False)
+    avatar_hash = db.Column(db.String(64))
     confirmed = db.Column(db.Boolean, default=False)
     add_time = db.Column(db.DateTime, default=datetime.now)
 
@@ -20,6 +25,21 @@ class User(db.Model, UserMixin):
         self.email = email
         self.username = self.email
         self.password = password
+        self.avatar_hash = hashlib.md5(self.email.encode('UTF-8')).hexdigest()
+
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        if request.is_secure:
+            url = 'https://secure.gravatar.com/avatar'
+        else:
+            url = 'http://www.gravatar.com/avatar'
+        hash_num = self.avatar_hash or hashlib.md5(self.email.encode('UTF-8')).hexdigest()
+        return '{url}/{hash_num}?s={size}&d={default}&r={rating}'.format(
+            url=url,
+            hash_num=hash_num,
+            size=size,
+            default=default,
+            rating=rating
+        )
 
     def generate_confirmation_token(self, expiration=3600):
         """产生激活帐号令牌"""
