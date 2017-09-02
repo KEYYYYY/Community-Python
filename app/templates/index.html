@@ -1,13 +1,29 @@
 {% extends 'base.html' %}
 {% block title %}玩蛇社区{% endblock %}
 {% block content %}
-<div class="col-md-10 col-md-offset-1">
-    <div class="page-header text-center">
-        {% if current_user.is_authenticated %}
-        <h1>你好{{ current_user.username }}</h1>
-        {% else %}
-        <h1>请登录</h1>
-        {% endif %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        {% for article in articles %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{{ url_for('home.profile', user_id=article.author.id) }}"><img
+                        src="{{ article.author.gravatar(size=30) }}" alt="头像" class="img-circle"></a>
+                <span class="panel-title">&nbsp;&nbsp;{{ article.author.username }}</span>
+            </div>
+            <div class="panel-body">
+                <h3><a>{{ article.title }}</a></h3>
+                <hr/>
+                <p>
+                    {{ article.content }}
+                </p>
+            </div>
+            <div class="panel-footer">
+                <span class="text-muted"><i class="fa fa-eye" aria-hidden="true"></i> {{ article.page_view }}&nbsp;&nbsp;</span>
+                <span class="text-muted"><i class="fa fa-comments" aria-hidden="true"></i> {{ article.page_view }}&nbsp;&nbsp;</span>
+                <span class="text-muted"><i class="fa fa-heart" aria-hidden="true"></i> {{ article.page_view }} </span>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

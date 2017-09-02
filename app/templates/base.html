@@ -28,7 +28,9 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li><a href="#">热门文章</a></li>
-                <li><a href="#">我的主页</a></li>
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('home.profile', user_id=current_user.id) }}">我的主页</a></li>
+                {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if current_user.is_authenticated %}
@@ -37,7 +39,7 @@
                        aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> 增加 <span
                             class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">撰写博客</a></li>
+                        <li><a href="{{ url_for('home.edit_article') }}">撰写博客</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

@@ -20,6 +20,7 @@ class User(db.Model, UserMixin):
     avatar_hash = db.Column(db.String(64))
     confirmed = db.Column(db.Boolean, default=False)
     add_time = db.Column(db.DateTime, default=datetime.now)
+    articles = db.relationship('Article', backref='author', lazy='dynamic')
 
     def __init__(self, email, password):
         self.email = email

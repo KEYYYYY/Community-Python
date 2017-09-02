@@ -3,6 +3,7 @@ from flask_migrate import Migrate, MigrateCommand
 
 from app import create_app, db
 from app.auth.modles import User
+from app.home.models import Article
 
 app = create_app()
 manager = Manager(app)
@@ -16,7 +17,8 @@ def make_shell_context():
     return dict(
         app=app,
         db=db,
-        User=User
+        User=User,
+        Article=Article
     )
 
 
