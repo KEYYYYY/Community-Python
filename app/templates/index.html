@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}玩蛇社区{% endblock %}
+{% import 'macros.html' as macros %}
 {% block content %}
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
@@ -11,7 +12,9 @@
                 <span class="panel-title">&nbsp;&nbsp;{{ article.author.username }}</span>
             </div>
             <div class="panel-body">
-                <h3><a>{{ article.title }}</a></h3>
+                <h3>
+                    {{ article.title }}
+                </h3>
                 <hr/>
                 <p>
                     {{ article.content }}
@@ -24,6 +27,9 @@
             </div>
         </div>
         {% endfor %}
+        <nav aria-label="Page navigation">
+            {{ macros.pagination_widget(pagination, 'home.index') }}
+        </nav>
     </div>
 </div>
 {% endblock %}

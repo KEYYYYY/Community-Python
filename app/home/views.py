@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, flash, redirect, url_for
+from flask import Blueprint, render_template, abort, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 
 from app.auth.modles import User
@@ -11,8 +11,13 @@ home = Blueprint('home', __name__)
 
 @home.route('/')
 def index():
-    articles = Article.query.order_by(Article.publish_time.desc()).all()
-    return render_template('index.html', articles=articles)
+    page = request.args.get('page', 1, type=int)
+    pagination = Article.query.order_by(Article.publish_time.desc()).paginate(
+        page,
+        per_page=3
+    )
+    articles = pagination.items
+    return render_template('index.html', articles=articles, pagination=pagination)
 
 
 @home.route('/user/<user_id>/edit_profile/', methods=['GET', 'POST'])
