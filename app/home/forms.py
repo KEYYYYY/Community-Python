@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField
 from wtforms.validators import Length, DataRequired
+from flask_pagedown.fields import PageDownField
 
 
 class EditProfileForm(FlaskForm):
@@ -17,5 +18,5 @@ class ArticleForm(FlaskForm):
         DataRequired(message='这是必填字段'),
         Length(0, 32, message='题目要求在64个字以内')
     ])
-    content = TextAreaField('正文')
+    content = PageDownField('正文')
     submit = SubmitField('发表')

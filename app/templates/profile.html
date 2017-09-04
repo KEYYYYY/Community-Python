@@ -11,16 +11,19 @@
             </h3>
         </div>
         <ul class="list-group">
-            <li class="list-group-item"><i class="fa fa-envelope" aria-hidden="true"></i> 邮箱<span
-                    class="badge">{{ user.email }}</span>
+            <li class="list-group-item">
+                <i class="fa fa-envelope text-center" aria-hidden="true"></i> 邮箱：
+                <span class="text-muted">{{ user.email }}</span>
             </li>
-            <li class="list-group-item"><i class="fa fa-globe" aria-hidden="true"></i> 地址<span
-                    class="badge">{{ user.location }}</span>
+            <li class="list-group-item"><i class="fa fa-globe" aria-hidden="true"></i> 地址：
+                <span class="text-muted">{{ user.location }}</span>
             </li>
-            <li class="list-group-item"><i class="fa fa-clock-o" aria-hidden="true"></i> 加入时间<span
-                    class="badge">{{ user.add_time.strftime('%Y-%m-%d %H:%M') }}</span></li>
-            <li class="list-group-item"><i class="fa fa-book" aria-hidden="true"></i> 发表文章<span
-                    class="badge">{{ user.articles.all()|length}}篇</span></li>
+            <li class="list-group-item"><i class="fa fa-clock-o" aria-hidden="true"></i> 加入时间：
+                <span class="text-muted">{{ moment(user.add_time).format('LLL') }}</span>
+            </li>
+            <li class="list-group-item"><i class="fa fa-book" aria-hidden="true"></i> 发表文章：
+                <span class="text-muted">{{ user.articles.all()|length}}篇</span>
+            </li>
         </ul>
         <div class="panel-footer">
             <p>个人简介：{{ user.about_me }}</p>
@@ -32,10 +35,13 @@
     <div class="thumbnail">
         <div class="caption">
             <h3>{{ article.title }}</h3>
-            <p>{{ article.content }}</p>
+            <p>{{ article.content_html | safe }}</p>
             <p>
-                <a href="#" class="btn btn-success btn-sm" role="button">查看</a>
-                <a href="#" class="btn btn-danger btn-sm" role="button">删除</a>
+                <a href="{{ url_for('home.modify_article', article_id=article.id) }}" class="btn btn-success btn-sm"
+                   role="button"><i class="fa fa-edit" aria-hidden="true"></i> 编辑</a>
+                <a href="{{ url_for('home.remove_article', article_id=article.id) }}" class="btn btn-danger btn-sm"
+                   role="button"><i class="fa fa-remove"
+                                    aria-hidden="true"></i> 删除</a>
             </p>
         </div>
     </div>

@@ -14,7 +14,7 @@ def index():
     page = request.args.get('page', 1, type=int)
     pagination = Article.query.order_by(Article.publish_time.desc()).paginate(
         page,
-        per_page=3
+        per_page=2
     )
     articles = pagination.items
     return render_template('index.html', articles=articles, pagination=pagination)
@@ -54,6 +54,7 @@ def edit_article():
             content=article_form.content.data,
             author=current_user
         )
+        article.change_content()
         db.session.add(article)
         db.session.commit()
         flash('发表成功')
@@ -65,3 +66,34 @@ def edit_article():
 def profile(user_id):
     user = User.query.get_or_404(user_id)
     return render_template('profile.html', user=user)
+
+
+@home.route('/modify_article/<article_id>', methods=['GET', 'POST'])
+@login_required
+def modify_article(article_id):
+    article = Article.query.get_or_404(article_id)
+    if article.author != current_user:
+        abort(403)
+    article_form = ArticleForm()
+    article_form.title.data = article.title
+    article_form.content.data = article.content
+    if article_form.validate_on_submit():
+        article.title = article_form.title.data
+        article.content = article_form.content.data
+        db.session.add(article)
+        db.session.commit()
+        flash('修改成功')
+        return redirect(url_for('home.index'))
+    return render_template('modify-article.html', article_form=article_form)
+
+
+@home.route('/remove_article/<article_id>')
+@login_required
+def remove_article(article_id):
+    article = Article.query.get_or_404(article_id)
+    if article.author != current_user:
+        abort(403)
+    db.session.delete(article)
+    db.session.commit()
+    flash('删除成功')
+    return redirect(url_for('home.index'))

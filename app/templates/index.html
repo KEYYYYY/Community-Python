@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}玩蛇社区{% endblock %}
 {% import 'macros.html' as macros %}
+
 {% block content %}
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
@@ -14,16 +15,21 @@
             <div class="panel-body">
                 <h3>
                     {{ article.title }}
+                    <small>{{ moment(article.publish_time).fromNow(refresh=True) }}</small>
                 </h3>
+                <p>
+                    <span class="text-muted"><i class="fa fa-eye" aria-hidden="true"></i> {{ article.page_view }}&nbsp;&nbsp;</span>
+                    <span class="text-muted"><i class="fa fa-comments" aria-hidden="true"></i> {{ article.page_view }}&nbsp;&nbsp;</span>
+                    <span class="text-muted"><i class="fa fa-heart"
+                                                aria-hidden="true"></i> {{ article.page_view }} </span>
+                </p>
                 <hr/>
                 <p>
-                    {{ article.content }}
+                    {{ article.content_html | safe }}
                 </p>
             </div>
             <div class="panel-footer">
-                <span class="text-muted"><i class="fa fa-eye" aria-hidden="true"></i> {{ article.page_view }}&nbsp;&nbsp;</span>
-                <span class="text-muted"><i class="fa fa-comments" aria-hidden="true"></i> {{ article.page_view }}&nbsp;&nbsp;</span>
-                <span class="text-muted"><i class="fa fa-heart" aria-hidden="true"></i> {{ article.page_view }} </span>
+                <a href="#" class="btn btn-primary">查看全文</a>
             </div>
         </div>
         {% endfor %}
