@@ -21,6 +21,18 @@ class User(db.Model, UserMixin):
     confirmed = db.Column(db.Boolean, default=False)
     add_time = db.Column(db.DateTime, default=datetime.utcnow)
     articles = db.relationship('Article', backref='author', lazy='dynamic')
+    followers = db.relationship(
+        'Follow',
+        foreign_keys=['Follow.followed_id'],
+        backref='followed',
+        lazy='dynamic'
+    )
+    followed = db.relationship(
+        'Follow',
+        foreign_keys=['Follow.follower_id'],
+        backref='follower',
+        lazy='dynamic'
+    )
 
     def __init__(self, email, password):
         self.email = email
@@ -29,11 +41,14 @@ class User(db.Model, UserMixin):
         self.avatar_hash = hashlib.md5(self.email.encode('UTF-8')).hexdigest()
 
     def gravatar(self, size=100, default='identicon', rating='g'):
+        """得到头像URL"""
         if request.is_secure:
             url = 'https://secure.gravatar.com/avatar'
         else:
             url = 'http://www.gravatar.com/avatar'
-        hash_num = self.avatar_hash or hashlib.md5(self.email.encode('UTF-8')).hexdigest()
+        hash_num = self.avatar_hash or hashlib.md5(
+            self.email.encode('UTF-8')
+        ).hexdigest()
         return '{url}/{hash_num}?s={size}&d={default}&r={rating}'.format(
             url=url,
             hash_num=hash_num,

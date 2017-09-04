@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, abort, flash, redirect, url_for, request
+from flask import Blueprint, render_template, abort, flash, redirect, url_for
+from flask import request
 from flask_login import login_required, current_user
 
 from app.auth.modles import User
@@ -17,7 +18,11 @@ def index():
         per_page=2
     )
     articles = pagination.items
-    return render_template('index.html', articles=articles, pagination=pagination)
+    return render_template(
+        'index.html',
+        articles=articles,
+        pagination=pagination
+    )
 
 
 @home.route('/user/<user_id>/edit_profile/', methods=['GET', 'POST'])
@@ -41,7 +46,10 @@ def edit_profile(user_id):
     edit_profile_form.username.data = user.username
     edit_profile_form.location.data = user.location
     edit_profile_form.about_me.data = user.about_me
-    return render_template('edit-profile.html', edit_profile_form=edit_profile_form)
+    return render_template(
+        'edit-profile.html',
+        edit_profile_form=edit_profile_form
+    )
 
 
 @home.route('/edit_article/', methods=['GET', 'POST'])
@@ -75,15 +83,16 @@ def modify_article(article_id):
     if article.author != current_user:
         abort(403)
     article_form = ArticleForm()
-    article_form.title.data = article.title
-    article_form.content.data = article.content
     if article_form.validate_on_submit():
         article.title = article_form.title.data
         article.content = article_form.content.data
+        article.change_content()
         db.session.add(article)
         db.session.commit()
         flash('修改成功')
         return redirect(url_for('home.index'))
+    article_form.title.data = article.title
+    article_form.content.data = article.content
     return render_template('modify-article.html', article_form=article_form)
 
 
