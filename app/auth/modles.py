@@ -8,6 +8,7 @@ from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 from app import db
+from app.home.models import Follow
 
 
 class User(db.Model, UserMixin):
@@ -23,13 +24,13 @@ class User(db.Model, UserMixin):
     articles = db.relationship('Article', backref='author', lazy='dynamic')
     followers = db.relationship(
         'Follow',
-        foreign_keys=['Follow.followed_id'],
+        foreign_keys=[Follow.followed_id],
         backref='followed',
         lazy='dynamic'
     )
     followed = db.relationship(
         'Follow',
-        foreign_keys=['Follow.follower_id'],
+        foreign_keys=[Follow.follower_id],
         backref='follower',
         lazy='dynamic'
     )

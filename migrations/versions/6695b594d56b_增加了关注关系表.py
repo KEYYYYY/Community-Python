@@ -1,8 +1,8 @@
-"""'增加关注关系表'
+"""增加了关注关系表
 
-Revision ID: 4f12b6b3e057
+Revision ID: 6695b594d56b
 Revises: a30607f8162f
-Create Date: 2017-09-04 19:46:53.250688
+Create Date: 2017-09-05 23:23:30.246042
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4f12b6b3e057'
+revision = '6695b594d56b'
 down_revision = 'a30607f8162f'
 branch_labels = None
 depends_on = None
