@@ -8,8 +8,9 @@
         {% for article in articles %}
         <div class="panel panel-default">
             <div class="panel-heading">
-                <a href="{{ url_for('home.profile', user_id=article.author.id) }}"><img
-                        src="{{ article.author.gravatar(size=30) }}" alt="头像" class="img-circle"></a>
+                <a href="{{ url_for('home.profile', user_id=article.author.id) }}">
+                    <img src="{{ article.author.gravatar(size=30) }}" alt="头像" class="img-circle">
+                </a>
                 <span class="panel-title">&nbsp;&nbsp;{{ article.author.username }}</span>
             </div>
             <div class="panel-body">
@@ -20,8 +21,7 @@
                 <p>
                     <span class="text-muted"><i class="fa fa-eye" aria-hidden="true"></i> {{ article.page_view }}&nbsp;&nbsp;</span>
                     <span class="text-muted"><i class="fa fa-comments" aria-hidden="true"></i> {{ article.page_view }}&nbsp;&nbsp;</span>
-                    <span class="text-muted"><i class="fa fa-heart"
-                                                aria-hidden="true"></i> {{ article.page_view }} </span>
+                    <span class="text-muted"><i class="fa fa-heart" aria-hidden="true"></i> {{ article.page_view }} </span>
                 </p>
                 <hr/>
                 <p>

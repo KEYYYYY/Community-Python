@@ -25,14 +25,16 @@ class User(db.Model, UserMixin):
     followers = db.relationship(
         'Follow',
         foreign_keys=[Follow.followed_id],
-        backref='followed',
-        lazy='dynamic'
+        backref=db.backref('followed', lazy='joined'),
+        lazy='dynamic',
+        cascade='all, delete-orphan'
     )
     followed = db.relationship(
         'Follow',
         foreign_keys=[Follow.follower_id],
-        backref='follower',
-        lazy='dynamic'
+        backref=db.backref('follower', lazy='joined'),
+        lazy='dynamic',
+        cascade='all, delete-orphan'
     )
 
     def __init__(self, email, password):
@@ -92,3 +94,20 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User {0}>'.format(self.email)
+
+    def is_following(self, user):
+        return any(self.followed.filter_by(
+            followed_id=user.id
+        ))
+
+    def follow(self, user):
+        if not self.is_following(user):
+            f = Follow(follower=self, followed=user)
+            db.session.add(f)
+            db.session.commit()
+
+    def unfollow(self, user):
+        f = self.followed.filter_by(followed_id=user.id).first()
+        if f:
+            db.session.delete(f)
+            db.session.commit()

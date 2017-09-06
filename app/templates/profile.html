@@ -19,15 +19,26 @@
                 <span class="text-muted">{{ moment(user.add_time).format('LLL') }}</span>
             </li>
             <li class="list-group-item"><i class="fa fa-book" aria-hidden="true"></i> 发表文章：
-                <span class="text-muted">{{ user.articles.all()|length}}篇</span>
+                <span class="text-muted">{{ user.articles.count() }}篇</span>
             </li>
         </ul>
         <div class="panel-footer">
             <p>个人简介：{{ user.about_me }}</p>
+            {% if user != current_user %}
+                {% if current_user.is_following(user) %}
+                <a href="{{ url_for('home.unfollow', user_id=user.id) }}" class="btn btn-danger btn-block">取消关注</a>
+                {% else %}
+                <a href="{{ url_for('home.follow', user_id=user.id) }}" class="btn btn-success btn-block">关注</a>   
+                {% endif %}             
+            {% endif %}
         </div>
     </div>
 </div>
 <div class="col-md-8">
+    <p>
+        <a class="btn btn-primary" type="button">关注 <span class="badge">{{ user.followed.count() }}</span></a>
+        <a class="btn btn-primary" type="button">粉丝 <span class="badge">{{ user.followers.count() }}</span></a>
+    </p>
     {% for article in user.articles %}
     <div class="thumbnail">
         <div class="caption">

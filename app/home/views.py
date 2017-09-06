@@ -106,3 +106,21 @@ def remove_article(article_id):
     db.session.commit()
     flash('删除成功')
     return redirect(url_for('home.index'))
+
+
+@home.route('/follow/<user_id>')
+@login_required
+def follow(user_id):
+    user = User.query.get_or_404(user_id)
+    current_user.follow(user)
+    flash('关注成功')
+    return redirect(url_for('home.profile', user_id=user_id))
+
+
+@home.route('/unfollow/<user_id>')
+@login_required
+def unfollow(user_id):
+    user = User.query.get_or_404(user_id)
+    current_user.unfollow(user)
+    flash('取消关注成功')
+    return redirect(url_for('home.profile', user_id=user_id))
