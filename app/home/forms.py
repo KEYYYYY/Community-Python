@@ -20,3 +20,10 @@ class ArticleForm(FlaskForm):
     ])
     content = PageDownField('正文')
     submit = SubmitField('发表')
+
+
+class CommentForm(FlaskForm):
+    content = PageDownField('评论', validators=[
+        DataRequired(message='这是必填字段')
+    ])
+    submit = SubmitField('提交')

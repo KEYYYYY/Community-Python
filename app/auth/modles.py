@@ -36,6 +36,11 @@ class User(db.Model, UserMixin):
         lazy='dynamic',
         cascade='all, delete-orphan'
     )
+    comments = db.relationship(
+        'Comment',
+        backref='user',
+        lazy='dynamic'
+    )
 
     def __init__(self, email, password):
         self.email = email

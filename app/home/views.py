@@ -3,8 +3,8 @@ from flask import request
 from flask_login import login_required, current_user
 
 from app.auth.modles import User
-from app.home.models import Article
-from app.home.forms import EditProfileForm, ArticleForm
+from app.home.models import Article, Comment
+from app.home.forms import EditProfileForm, ArticleForm, CommentForm
 from app import db
 
 home = Blueprint('home', __name__)
@@ -76,7 +76,7 @@ def profile(user_id):
     return render_template('profile.html', user=user)
 
 
-@home.route('/modify_article/<article_id>', methods=['GET', 'POST'])
+@home.route('/modify_article/<article_id>/', methods=['GET', 'POST'])
 @login_required
 def modify_article(article_id):
     article = Article.query.get_or_404(article_id)
@@ -96,7 +96,7 @@ def modify_article(article_id):
     return render_template('modify-article.html', article_form=article_form)
 
 
-@home.route('/remove_article/<article_id>')
+@home.route('/remove_article/<article_id>/')
 @login_required
 def remove_article(article_id):
     article = Article.query.get_or_404(article_id)
@@ -108,7 +108,7 @@ def remove_article(article_id):
     return redirect(url_for('home.index'))
 
 
-@home.route('/follow/<user_id>')
+@home.route('/follow/<user_id>/')
 @login_required
 def follow(user_id):
     user = User.query.get_or_404(user_id)
@@ -117,10 +117,52 @@ def follow(user_id):
     return redirect(url_for('home.profile', user_id=user_id))
 
 
-@home.route('/unfollow/<user_id>')
+@home.route('/unfollow/<user_id>/')
 @login_required
 def unfollow(user_id):
     user = User.query.get_or_404(user_id)
     current_user.unfollow(user)
     flash('取消关注成功')
     return redirect(url_for('home.profile', user_id=user_id))
+
+
+@home.route('/article/<article_id>/', methods=['GET', 'POST'])
+@login_required
+def article_detail_and_comment(article_id):
+    article = Article.query.get_or_404(article_id)
+    # 浏览量+1
+    article.page_view += 1
+    db.session.add(article)
+    db.session.commit()
+    comment_form = CommentForm()
+    # 对评论先分页
+    page = request.args.get('page', 1, type=int)
+    pagination = article.comments.order_by(Comment.timestamp.desc()).paginate(
+        page,
+        per_page=3
+    )
+    comments = pagination.items
+    # 提交评论
+    if comment_form.validate_on_submit():
+        comment = Comment(
+            user=current_user._get_current_object(),
+            article=article,
+            content=comment_form.content.data
+        )
+        comment.change_content()
+        db.session.add(comment)
+        db.session.commit()
+        flash('评论成功')
+        return redirect(
+            url_for(
+                'home.article_detail_and_comment',
+                article_id=article_id
+            )
+        )
+    return render_template(
+        'article-detail.html',
+        article=article,
+        comment_form=comment_form,
+        comments=comments,
+        pagination=pagination
+    )
