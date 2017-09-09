@@ -2,7 +2,7 @@ from datetime import datetime
 import hashlib
 
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import request
+from flask import request, url_for
 from flask_login import UserMixin
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -116,3 +116,14 @@ class User(db.Model, UserMixin):
         if f:
             db.session.delete(f)
             db.session.commit()
+
+    def to_json(self):
+        json_user = {
+            'username': self.username,
+            'email': self.email,
+            'about_me': self.about_me,
+            'confirmed': self.confirmed,
+            'location': self.location,
+            'add_time': self.add_time,
+        }
+        return json_user

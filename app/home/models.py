@@ -2,6 +2,7 @@ from datetime import datetime
 import bleach
 
 from markdown import markdown
+from flask import url_for
 
 from app import db
 
@@ -42,6 +43,25 @@ class Article(db.Model):
             strip=True
         ))
 
+    def to_json(self):
+        json_article = {
+            'author': url_for(
+                'api.get_user',
+                user_id=self.author_id,
+                _external=True
+            ),
+            'title': self.title,
+            'content': self.content,
+            'content_html': self.content_html,
+            'comments_count': self.comments.count(),
+            'comments': url_for(
+                'api.get_comments',
+                article_id=self.id,
+                _external=True
+            )
+        }
+        return json_article
+
 
 class Follow(db.Model):
     follower_id = db.Column(
@@ -76,3 +96,21 @@ class Comment(db.Model):
             tags=allowed_tags,
             strip=True
         ))
+
+    def to_json(self):
+        json_comment = {
+            'user': url_for(
+                'api.get_user',
+                user_id=self.user_id,
+                _external=True
+            ),
+            'article': url_for(
+                'api.get_article',
+                article_id=self.article_id,
+                _external=True
+            ),
+            'content': self.content,
+            'content_html': self.content_html,
+            'timestamp': self.timestamp
+        }
+        return json_comment
