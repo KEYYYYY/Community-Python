@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, flash, redirect, url_for
+from flask import render_template, abort, flash, redirect, url_for
 from flask import request
 from flask_login import login_required, current_user
 
@@ -6,8 +6,7 @@ from app.auth.modles import User
 from app.home.models import Article, Comment
 from app.home.forms import EditProfileForm, ArticleForm, CommentForm
 from app import db
-
-home = Blueprint('home', __name__)
+from app.home import home
 
 
 @home.route('/')
@@ -73,7 +72,8 @@ def edit_article():
 @home.route('/user/<user_id>/profile/')
 def profile(user_id):
     user = User.query.get_or_404(user_id)
-    return render_template('profile.html', user=user)
+    articles = user.articles.order_by(Article.publish_time.desc()).all()
+    return render_template('profile.html', user=user, articles=articles)
 
 
 @home.route('/modify_article/<article_id>/', methods=['GET', 'POST'])
@@ -165,4 +165,17 @@ def article_detail_and_comment(article_id):
         comment_form=comment_form,
         comments=comments,
         pagination=pagination
+    )
+
+
+@home.route('/followers/<int:user_id>/')
+def followers(user_id):
+    user = User.query.get_or_404(user_id)
+    users = []
+    for item in user.followers.all():
+        users.append(item.follower)
+    return render_template(
+        'follow-user.html',
+        users=users,
+        user=user
     )

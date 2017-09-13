@@ -2,8 +2,6 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
 from app import create_app, db
-from app.auth.modles import User
-from app.home.models import Article, Follow, Comment
 
 app = create_app()
 manager = Manager(app)
@@ -14,6 +12,8 @@ manager.add_command('db', MigrateCommand)
 
 @manager.shell
 def make_shell_context():
+    from app.auth.modles import User
+    from app.home.models import Article, Follow, Comment
     return dict(
         app=app,
         db=db,

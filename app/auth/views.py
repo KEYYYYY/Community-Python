@@ -1,15 +1,14 @@
 from flask import redirect, url_for, flash, request
-from flask import Blueprint, render_template
+from flask import render_template
 from flask_login import login_user, logout_user, login_required
 from flask_mail import Message
 from flask_login import current_user
 
 from app.auth.forms import LoginForm, RegisterForm, ModifyPasswordForm
 from app.auth.modles import User
+from app.auth import auth
 from app import login_manager
 from app import db, mail
-
-auth = Blueprint('auth', __name__)
 
 
 @login_manager.user_loader
@@ -49,7 +48,12 @@ def register():
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
-        send_email(to=user.email, subject='请激活您的帐号', template='confirm.html', token=token)
+        send_email(
+            to=user.email,
+            subject='请激活您的帐号',
+            template='confirm.html',
+            token=token
+        )
         flash('注册成功，已经向你的邮箱发送了一封激活邮件，请您查收')
         return redirect(url_for('home.index'))
     return render_template('register.html', register_form=register_form)
@@ -103,7 +107,9 @@ def resend_email(category):
 def modify_password():
     modify_password_form = ModifyPasswordForm()
     if modify_password_form.validate_on_submit():
-        if current_user.verify_password(modify_password_form.old_password.data):
+        if current_user.verify_password(
+            modify_password_form.old_password.data
+        ):
             current_user.password = modify_password_form.new_password.data
             db.session.add(current_user)
             db.session.commit()
@@ -111,4 +117,7 @@ def modify_password():
             return redirect(url_for('auth.logout'))
         else:
             flash('旧密码输入错误')
-    return render_template('modify-password.html', modify_password_form=modify_password_form)
+    return render_template(
+        'modify-password.html',
+        modify_password_form=modify_password_form
+    )

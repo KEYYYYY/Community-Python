@@ -27,10 +27,10 @@ def create_app():
     moment.init_app(app)
     page_down.init_app(app)
 
-    from app.home import views as home_view
-    from app.auth import views as auth_views
-    from app.api import api
-    app.register_blueprint(home_view.home)
-    app.register_blueprint(auth_views.auth, url_prefix='/auth')
-    app.register_blueprint(api, url_prefix='/api')
+    from app.home import home as home_blueprint
+    from app.auth import auth as auth_blueprint
+    from app.api import api as api_blueprint
+    app.register_blueprint(home_blueprint)
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    app.register_blueprint(api_blueprint, url_prefix='/api')
     return app
