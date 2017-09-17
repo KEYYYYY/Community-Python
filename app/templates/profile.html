@@ -42,8 +42,8 @@
     </div>
     <div class="col-md-8">
         <p>
-            <a class="btn btn-primary" type="button">关注 <span class="badge">{{ user.followed.count() }}</span></a>
-            <a class="btn btn-primary" type="button">粉丝 <span class="badge">{{ user.followers.count() }}</span></a>
+            <a href="{{ url_for('home.followed', user_id=user.id) }}" class="btn btn-primary" type="button">关注 <span class="badge">{{ user.followed.count() }}</span></a>
+            <a href="{{ url_for('home.followers', user_id=user.id) }}" class="btn btn-primary" type="button">粉丝 <span class="badge">{{ user.followers.count() }}</span></a>
         </p>
         {% for article in articles %}
             <div class="thumbnail">

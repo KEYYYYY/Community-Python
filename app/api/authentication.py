@@ -1,29 +1,38 @@
 from flask_httpauth import HTTPBasicAuth
-from flask_login import AnonymousUserMixin
-from flask import g
+from flask import g, make_response, jsonify
 
-from app.auth.modles import User
+from app.auth.models import User
 from app.api import api
-from app.api.errors import forbidden
 
 auth = HTTPBasicAuth()
 
 
 @auth.verify_password
 def verify_password(email, password):
-    if email == '':
-        g.current_user = AnonymousUserMixin()
-        return True
     user = User.query.filter_by(email=email).first()
     if not user:
         return False
-    g.current_user = user
-    return user.verify_password(password)
+    if user.verify_password(password):
+        g.current_user = user
+        return True
+    return False
+
+
+@auth.error_handler
+def auth_error():
+    return make_response(jsonify({
+        'error': '权限不允许'
+    }), 401)
 
 
 @api.before_request
 @auth.login_required
 def before_request():
-    if not g.current_user.is_anonymous and \
-            not g.current_user.confirmed:
-        return forbidden('未通过验证')
+    if not g.current_user:
+        return make_response(jsonify({
+            'error': '账户或密码错误'
+        }), 403)
+    elif not g.current_user.confirmed:
+        return make_response(jsonify({
+            'error': '帐号未激活'
+        }), 403)

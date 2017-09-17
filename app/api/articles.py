@@ -33,13 +33,13 @@ def get_articles():
         })
     if request.method == 'POST':
         try:
+            data = request.get_json(force=True)
             article = Article(
-                title=request.args['title']
+                title=data['title'],
+                content=data.get('content')
             )
             db.session.add(article)
             db.session.commit()
         except:
-            return jsonify({
-                'message': '必填字段为空'
-            }), 400
-        return 201
+            pass
+        pass

@@ -12,7 +12,7 @@ manager.add_command('db', MigrateCommand)
 
 @manager.shell
 def make_shell_context():
-    from app.auth.modles import User
+    from app.auth.models import User
     from app.home.models import Article, Follow, Comment
     return dict(
         app=app,

@@ -1,7 +1,9 @@
-from flask import jsonify, request, url_for
+from flask import jsonify, request, url_for, make_response
 
 from app.api import api
-from app.auth.modles import User
+from app.auth.models import User
+from app import db
+from app.auth.views import send_email
 
 
 @api.route('/users/<int:user_id>/')
@@ -29,3 +31,28 @@ def get_users():
         'prev': prev,
         'next': next
     })
+
+
+@api.route('/users/', methods=['POST'])
+def register():
+    try:
+        data = request.get_json(force=True)
+        email = data['email']
+        password = data['password']
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+        token = user.generate_confirmation_token()
+        send_email(
+            to=user.email,
+            subject='请激活您的帐号',
+            template='confirm.html',
+            token=token
+        )
+        return make_response(jsonify({
+            'ok': '注册成功，请尽快激活您的帐号'
+        }), 201)
+    except:
+        return make_response(jsonify({
+            'error': '注册失败'
+        }), 400)

@@ -2,7 +2,7 @@ from flask import render_template, abort, flash, redirect, url_for
 from flask import request
 from flask_login import login_required, current_user
 
-from app.auth.modles import User
+from app.auth.models import User
 from app.home.models import Article, Comment
 from app.home.forms import EditProfileForm, ArticleForm, CommentForm
 from app import db
@@ -11,6 +11,7 @@ from app.home import home
 
 @home.route('/')
 def index():
+    """主页"""
     page = request.args.get('page', 1, type=int)
     pagination = Article.query.order_by(Article.publish_time.desc()).paginate(
         page,
@@ -27,6 +28,7 @@ def index():
 @home.route('/user/<user_id>/edit_profile/', methods=['GET', 'POST'])
 @login_required
 def edit_profile(user_id):
+    """编辑个人主页"""
     user = User.query.filter_by(id=user_id).first()
     if not user or user != current_user:
         abort(404)
@@ -54,6 +56,7 @@ def edit_profile(user_id):
 @home.route('/edit_article/', methods=['GET', 'POST'])
 @login_required
 def edit_article():
+    """发表文章的编辑页面"""
     article_form = ArticleForm()
     if article_form.validate_on_submit():
         article = Article(
@@ -71,6 +74,7 @@ def edit_article():
 
 @home.route('/user/<user_id>/profile/')
 def profile(user_id):
+    """查看个人主页"""
     user = User.query.get_or_404(user_id)
     articles = user.articles.order_by(Article.publish_time.desc()).all()
     return render_template('profile.html', user=user, articles=articles)
@@ -79,6 +83,7 @@ def profile(user_id):
 @home.route('/modify_article/<article_id>/', methods=['GET', 'POST'])
 @login_required
 def modify_article(article_id):
+    """修改文章"""
     article = Article.query.get_or_404(article_id)
     if article.author != current_user:
         abort(403)
@@ -99,6 +104,7 @@ def modify_article(article_id):
 @home.route('/remove_article/<article_id>/')
 @login_required
 def remove_article(article_id):
+    """删除文章"""
     article = Article.query.get_or_404(article_id)
     if article.author != current_user:
         abort(403)
@@ -111,6 +117,7 @@ def remove_article(article_id):
 @home.route('/follow/<user_id>/')
 @login_required
 def follow(user_id):
+    """关注"""
     user = User.query.get_or_404(user_id)
     current_user.follow(user)
     flash('关注成功')
@@ -120,6 +127,7 @@ def follow(user_id):
 @home.route('/unfollow/<user_id>/')
 @login_required
 def unfollow(user_id):
+    """取消关注"""
     user = User.query.get_or_404(user_id)
     current_user.unfollow(user)
     flash('取消关注成功')
@@ -129,6 +137,7 @@ def unfollow(user_id):
 @home.route('/article/<article_id>/', methods=['GET', 'POST'])
 @login_required
 def article_detail_and_comment(article_id):
+    """文章详情页"""
     article = Article.query.get_or_404(article_id)
     # 浏览量+1
     article.page_view += 1
@@ -170,6 +179,7 @@ def article_detail_and_comment(article_id):
 
 @home.route('/followers/<int:user_id>/')
 def followers(user_id):
+    """查看粉丝"""
     user = User.query.get_or_404(user_id)
     users = []
     for item in user.followers.all():
@@ -177,5 +187,21 @@ def followers(user_id):
     return render_template(
         'follow-user.html',
         users=users,
-        user=user
+        user=user,
+        type='followers'
+    )
+
+
+@home.route('/followed/<int:user_id>/')
+def followed(user_id):
+    """"""
+    user = User.query.get_or_404(user_id)
+    users = []
+    for item in user.followed.all():
+        users.append(item.followed)
+    return render_template(
+        'follow-user.html',
+        users=users,
+        user=user,
+        type='followed'
     )

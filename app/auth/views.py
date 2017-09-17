@@ -5,7 +5,7 @@ from flask_mail import Message
 from flask_login import current_user
 
 from app.auth.forms import LoginForm, RegisterForm, ModifyPasswordForm
-from app.auth.modles import User
+from app.auth.models import User
 from app.auth import auth
 from app import login_manager
 from app import db, mail
