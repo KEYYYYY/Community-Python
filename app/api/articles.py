@@ -1,4 +1,4 @@
-from flask import jsonify, request, url_for
+from flask import jsonify, request, url_for, make_response, g
 
 from app.api import api
 from app.home.models import Article
@@ -36,10 +36,12 @@ def get_articles():
             data = request.get_json(force=True)
             article = Article(
                 title=data['title'],
-                content=data.get('content')
+                content=data.get('content'),
+                author=g.current_user
             )
+            article.change_content()
             db.session.add(article)
             db.session.commit()
+            return make_response(jsonify({'ok': '发送成功'}), 201)
         except:
-            pass
-        pass
+            return make_response(jsonify({'error': '发送失败'}), 400)
