@@ -1,0 +1,32 @@
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="well">
+                    <h1 class="text-center">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        用户注册
+                    </h1>
+                    {% crispy form %}
+                    <a href="{% url 'accounts:login' %}">已经有账号？点击登陆</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
