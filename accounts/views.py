@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect, reverse
 from django.views.generic.base import View
 
-from accounts.forms import RegiserForm, UserProfileForm
+from accounts.forms import RegiserForm, UserProfileForm, AvatarUploadForm
 from accounts.models import UserProfile
 
 
 class UserRegiserView(View):
+    """
+    用户注册视图
+    """
+
     def get(self, request):
         regiser_form = RegiserForm()
         return render(request, 'accounts/register.html', {
@@ -28,6 +32,10 @@ class UserRegiserView(View):
 
 
 class UserProfileView(View):
+    """
+    用户信息页视图
+    """
+
     def get(self, request):
         profile_form = UserProfileForm(instance=request.user.user_profile)
         return render(request, 'accounts/profile.html', {
@@ -43,3 +51,18 @@ class UserProfileView(View):
         return render(request, 'accounts/profile.html', {
             'profile_form': profile_form,
         })
+
+
+class AvatarUploadView(View):
+    """
+    修改头像视图
+    """
+
+    def post(self, request):
+        avatar_upload_form = AvatarUploadForm(request.POST, request.FILES)
+        if avatar_upload_form.is_valid():
+            avatar = avatar_upload_form.cleaned_data.get('avatar')
+            user_profile = request.user.user_profile
+            user_profile.avatar = avatar
+            user_profile.save()
+        return redirect(reverse('accounts:profile'))

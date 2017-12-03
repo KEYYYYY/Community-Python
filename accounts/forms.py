@@ -10,6 +10,9 @@ from accounts.models import UserProfile
 
 
 class LoginForm(AuthenticationForm):
+    """
+    用户登陆表单
+    """
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.add_input(
@@ -18,6 +21,9 @@ class LoginForm(AuthenticationForm):
 
 
 class RegiserForm(UserCreationForm):
+    """
+    用户注册表单
+    """
     password1 = forms.CharField(
         label='密码',
         strip=False,
@@ -45,6 +51,9 @@ class RegiserForm(UserCreationForm):
 
 
 class UserPasswordChangeForm(PasswordChangeForm):
+    """
+    用户更改密码表单
+    """
     new_password1 = forms.CharField(
         label='密码',
         strip=False,
@@ -60,9 +69,12 @@ class UserPasswordChangeForm(PasswordChangeForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    """
+    用户个人信息表单
+    """
     class Meta:
         model = UserProfile
-        exclude = ('user',)
+        exclude = ('user', 'avatar')
 
     def clean_phone(self):
         phone = self.cleaned_data['phone']
@@ -75,3 +87,12 @@ class UserProfileForm(forms.ModelForm):
     helper.add_input(
         Submit('login', '更新', css_class='btn-primary btn-block')
     )
+
+
+class AvatarUploadForm(forms.ModelForm):
+    """
+    头像上传表单
+    """
+    class Meta:
+        model = UserProfile
+        fields = ('avatar',)
