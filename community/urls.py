@@ -22,6 +22,7 @@ from community import settings
 urlpatterns = [
     url(r'^admin/', xadmin.site.urls),
     url(r'^accounts/', include('accounts.urls', 'accounts')),
+    url(r'', include('articles.urls', 'articles')),
     url(
         r'^media/(?P<path>.*)$',
         serve,

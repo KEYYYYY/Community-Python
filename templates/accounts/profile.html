@@ -1,51 +1,77 @@
-{% load crispy_forms_tags %}
-<!DOCTYPE html>
-<html lang="zh-cn">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
+{% block title %}个人主页{% endblock %}
 
-<body>
-    <div class="container">
-        <div class="well">
-            <div class="row">
-                <div style="margin-top: 100px" class="col-md-4 text-center">
-                    <form id="avatar-form" action="{% url 'accounts:avatar_upload' %}" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <img id="avatar" src="/media/{{ request.user.user_profile.avatar }}" alt="头像" class="img-circle" width="100px" height="100px">
-                        <br>
-                        <br>
-                        <input name="avatar" id="input-avatar" style="display: none" type="file">
-                        <input type="button" id="btn-upload" class="btn btn-success" value="修改头像">
-                    </form>
-                </div>
-                <h1 class="text-center">
-                    <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
-                    个人信息
-                </h1>
-                <div class="col-md-8">
-                    {% crispy profile_form %}
-                </div>
+{% block content %}
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3>
+                    <img width="50px" height="50px" src="/media/{{ user.user_profile.avatar }}" alt="头像" class="img-circle">
+                    <span>{{ user.username }}</span>
+                </h3>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <i class="fa fa-envelope text-center" aria-hidden="true"></i> 邮箱：
+                    <span class="text-muted">{{ user.email }}</span>
+                </li>
+                <li class="list-group-item"><i class="fa fa-globe" aria-hidden="true"></i> 地址：
+                    <span class="text-muted">{{ user.user_profile.location }}</span>
+                </li>
+                <li class="list-group-item"><i class="fa fa-clock-o" aria-hidden="true"></i> 加入时间：
+                    <span class="text-muted">{{ user.date_joined }}<span>
+                </li>
+                <li class="list-group-item"><i class="fa fa-book" aria-hidden="true"></i> 发表文章：
+                    <span class="text-muted">1</span>
+                </li>
+            </ul>
+            <div class="panel-footer">
+                <p>个人简介：{{ user.user_profile.about_me }}</p>
+                {% if request.user.is_authenticated and request.user.id != user.id %}
+                    <button id="following-or-unfollowing" class="btn {% if is_following %}btn-danger{% else %}btn-success{% endif %} btn-block">
+                        {% if is_following %}取消关注{% else %}关注{% endif %}
+                    </button>
+                {% endif %}
             </div>
         </div>
-    </div>
-</body>
+        <p>
+            <a href="#" class="btn btn-primary" type="button">关注 <span class="badge">{{ user.user_profile.get_following_count }}</span></a>
+            <a href="#" class="btn btn-primary" type="button">粉丝 <span id="followers-count" class="badge">{{ user.user_profile.get_followers_count }}</span></a>
+        </p>
+    <div class="col-md-8">
+{% endblock %}
 
-</html>
+{% block extra_js %}
 <script>
     $(document).ready(function () {
-        $('#btn-upload').click(function () {
-            $('#input-avatar').trigger('click')
-        })
-        $('#avatar-form').on('change', function () {
-            this.submit()
+        // 关注或取消关注
+        btn = $('#following-or-unfollowing')
+        btn.on('click', function() {
+            $.ajaxSetup({
+                headers: {"X-CSRFToken": '{{ csrf_token }}'}}
+            )
+            $.ajax({
+                type: 'POST',
+                url: '{% url "accounts:profile" user_id=user.id %}',
+                data: {'following_user': '{{ user.id }}'},
+                success: function (data) {
+                    if (data.status == 'ok') {
+                        if (btn.hasClass('btn-danger')) {
+                            btn.removeClass('btn-danger')
+                            btn.addClass('btn-success')
+                            btn.text('关注')
+                            $('#followers-count').text(String(Number($('#followers-count').text()) - 1))
+                        } else {
+                            btn.removeClass('btn-success')
+                            btn.addClass('btn-danger')
+                            btn.text('取消关注')
+                            $('#followers-count').text(String(Number($('#followers-count').text()) + 1))
+                        }
+                    }
+                }
+            })
         })
     })
 </script>
+{% endblock %}

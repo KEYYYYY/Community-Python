@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'accounts.apps.AccountsConfig',
+    'articles.apps.ArticlesConfig',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,5 @@ MEDIA_ROOT = 'media/'
 MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+LOGIN_REDIRECT_URL = '/index'

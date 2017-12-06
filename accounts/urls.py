@@ -1,8 +1,9 @@
 from django.conf.urls import url
 from django.contrib.auth import views
 
-from accounts.views import UserRegiserView, UserProfileView, AvatarUploadView
 from accounts.forms import LoginForm, UserPasswordChangeForm
+from accounts.views import (AvatarUploadView, UserProfileEditView,
+                            UserProfileView, UserRegiserView)
 
 urlpatterns = [
     url(r'^login/$', views.login, {
@@ -18,6 +19,15 @@ urlpatterns = [
         'password_change_form': UserPasswordChangeForm,
     }, name='password_change'),
     url(r'^regiser/$', UserRegiserView.as_view(), name='register'),
-    url(r'^profile/$', UserProfileView.as_view(), name='profile'),
+    url(
+        r'^profile/(?P<user_id>\d+)$',
+        UserProfileView.as_view(),
+        name='profile',
+    ),
+    url(
+        r'^profile-edit/$',
+        UserProfileEditView.as_view(),
+        name='profile_edit'
+    ),
     url(r'^avatar-upload/$', AvatarUploadView.as_view(), name='avatar_upload'),
 ]
