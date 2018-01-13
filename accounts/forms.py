@@ -74,7 +74,7 @@ class UserProfileForm(forms.ModelForm):
     """
     class Meta:
         model = UserProfile
-        exclude = ('user', 'avatar')
+        exclude = ('user', 'avatar', 'followers')
 
     def clean_phone(self):
         phone = self.cleaned_data['phone']

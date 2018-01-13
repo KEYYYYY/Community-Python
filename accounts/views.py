@@ -52,7 +52,9 @@ class UserProfileEditView(LoginRequiredMixin, View):
             user_profile = request.user.user_profile
             user_profile.location = profile_form.cleaned_data.get('location')
             user_profile.phone = profile_form.cleaned_data.get('phone')
+            user_profile.about_me = profile_form.cleaned_data.get('about_me')
             user_profile.save()
+            return redirect('accounts:profile', user_id=request.user.id)
         return render(request, 'accounts/profile.html', {
             'profile_form': profile_form,
         })

@@ -25,7 +25,12 @@ class Article(models.Model):
         verbose_name='所属栏目'
     )
     title = models.CharField(max_length=128, verbose_name='标题')
-    content = models.TextField(verbose_name='正文')
+    content = models.TextField(null=True, blank=True, verbose_name='正文')
+    content_html = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name='正文MarkDown'
+    )
     add_time = models.DateTimeField(default=datetime.now, verbose_name='发表时间')
 
     class Meta:
