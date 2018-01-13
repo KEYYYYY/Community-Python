@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
+{% load staticfiles %}
 
 <head>
     <meta charset="UTF-8">
@@ -10,6 +11,7 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     {% endblock %}
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/highlights/github.css' %}">
 </head>
 
 <body>
@@ -43,7 +45,7 @@
                             aria-expanded="false"><i class="fa fa-plus" aria-hidden="true"></i> 增加 <span
                                     class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">撰写博客</a></li>
+                                <li><a href="{% url 'articles:edit_article' %}">撰写博客</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">

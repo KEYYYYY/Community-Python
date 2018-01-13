@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect, reverse
-from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView
-from django.views.generic.base import View
 import markdown
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import DetailView, ListView
+from django.views.generic.base import View
 
 from articles.forms import ArticleForm
 from articles.models import Article
@@ -15,9 +14,6 @@ class IndexView(ListView):
     model = Article
     template_name = 'articles/index.html'
     context_object_name = 'articles'
-
-    def get(self, request):
-        return render(request, 'base.html')
 
 
 class EditArticle(View):
@@ -45,7 +41,7 @@ class EditArticle(View):
             )
             article.user = request.user
             article.save()
-        return redirect(reverse('articles:index'))
+        return redirect('articles:index')
 
 
 class ModifyArticleView(View):

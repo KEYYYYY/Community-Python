@@ -3,5 +3,36 @@
 {% block title %}首页{% endblock %}
 
 {% block content %}
-    
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            {% for article in articles %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="{% url 'accounts:profile' user_id=article.user.id %}">
+                            <img width="30px" height="30px" src="/media/{{ article.user.user_profile.avatar }}" alt="头像" class="img-circle">
+                        </a>
+                        <span class="panel-title">&nbsp;&nbsp;{{ article.user.username }}</span>
+                    </div>
+                    <div class="panel-body">
+                        <h2>
+                            {{ article.title }}
+                            <small>1小时前</small>
+                        </h2>
+                        <p>
+                            <span class="text-muted"><i class="fa fa-eye" aria-hidden="true"></i> 10&nbsp;&nbsp;</span>
+                            <span class="text-muted"><i class="fa fa-comments" aria-hidden="true"></i> 10&nbsp;&nbsp;</span>
+                            <span class="text-muted"><i class="fa fa-heart" aria-hidden="true"></i> 10 </span>
+                        </p>
+                        <hr/>
+                        <p>
+                            {{ article.content_html | safe }}
+                        </p>
+                    </div>
+                    <div class="panel-footer">
+                        <a href="#" class="btn btn-primary">查看全文</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}
