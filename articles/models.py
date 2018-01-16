@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class ArticleColumn(models.Model):
     user = models.ForeignKey(User, related_name='columns', verbose_name='用户')
-    name = models.CharField(max_length=64, verbose_name='名称')
+    name = models.CharField(max_length=64, unique=True, verbose_name='名称')
     add_time = models.DateTimeField(default=datetime.now, verbose_name='添加时间')
 
     class Meta:
@@ -36,6 +36,7 @@ class Article(models.Model):
     class Meta:
         verbose_name = '文章'
         verbose_name_plural = verbose_name
+        ordering = ('-add_time',)
 
     def __str__(self):
         return self.title

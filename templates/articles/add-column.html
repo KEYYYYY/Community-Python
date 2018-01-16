@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}增加栏目{% endblock %}
+
+{% block content %}
+    <div class="col-md-6 col-md-offset-3">
+        <div class="well">
+            <h1 class="text-center">
+                <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                增加栏目
+            </h1>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group {% if column_form.name.errors %} has-error {% endif %}">
+                    <label class="control-label" for="{{ column_form.name.id_for_label }}">名称</label>
+                    {{ column_form.name }}
+                    {% for error in column_form.name.errors %}
+                        <div class="has-error">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success btn-block">添加</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

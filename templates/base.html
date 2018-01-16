@@ -5,13 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Base{% endblock %}</title>
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">    
-    {% block scripts %}
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {% block js %}
+        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     {% endblock %}
-    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/highlights/github.css' %}">
+
+    {% block css%}
+        <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">        
+        <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/highlights/github.css' %}">
+    {% endblock %}
 </head>
 
 <body>
@@ -46,6 +49,7 @@
                                     class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="{% url 'articles:edit_article' %}">撰写博客</a></li>
+                                <li><a href="{% url 'articles:add_column' %}">增加栏目</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">

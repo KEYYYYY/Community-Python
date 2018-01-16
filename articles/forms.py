@@ -1,20 +1,32 @@
 from django.forms import ModelForm
-from crispy_forms.layout import Submit
-from crispy_forms.helper import FormHelper
 
-from articles.models import Article
+from articles.models import Article, ArticleColumn
 
 
-class ArticleForm(ModelForm):
+class BaseForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(BaseForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })
+
+
+class ArticleForm(BaseForm):
     """
     文章表单
     """
+
     class Meta:
         model = Article
         fields = ('column', 'title', 'content')
 
-    helper = FormHelper()
-    helper.form_method = 'POST'
-    helper.add_input(
-        Submit('submit', '发布', css_class='btn-primary btn-block')
-    )
+
+class ColumnForm(BaseForm):
+    """
+    栏目表单
+    """
+
+    class Meta:
+        model = ArticleColumn
+        fields = ('name',)
