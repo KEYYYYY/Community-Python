@@ -31,6 +31,7 @@ class Article(models.Model):
         blank=True,
         verbose_name='正文MarkDown'
     )
+    images = models
     add_time = models.DateTimeField(default=datetime.now, verbose_name='发表时间')
 
     class Meta:
@@ -40,3 +41,12 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ArticleImage(models.Model):
+    article = models.ForeignKey(
+        'Article', blank=True, related_name='images', verbose_name='插图')
+
+    class Meta:
+        verbose_name = '插图'
+        verbose_name_plural = verbose_name

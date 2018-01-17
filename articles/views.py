@@ -97,6 +97,9 @@ def upload_image(request):
     """
     文章上传图片视图
     """
+    request.FILES.save()
     return JsonResponse({
-        'status': 'ok'
+        'success': 1,           # 0 表示上传失败，1 表示上传成功
+        'message': '上传成功',
+        'url': "http://127.0.0.1:8000/media/avatars/e51f0c59-ac2d-3328-af6b-34c0c0312b05.jpg"        # 上传成功时才返回
     })
