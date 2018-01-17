@@ -48,9 +48,6 @@
         // 关注或取消关注
         btn = $('#following-or-unfollowing')
         btn.on('click', function() {
-            $.ajaxSetup({
-                headers: {"X-CSRFToken": '{{ csrf_token }}'}}
-            )
             $.ajax({
                 type: 'POST',
                 url: '{% url "accounts:profile" user_id=user.id %}',

@@ -4,7 +4,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views.generic.base import View
 
-from accounts.forms import AvatarUploadForm, RegiserForm, UserProfileForm
+from accounts.forms import RegiserForm, UserProfileForm
 from accounts.models import UserProfile
 
 
@@ -98,10 +98,11 @@ class AvatarUploadView(View):
     """
 
     def post(self, request):
-        avatar_upload_form = AvatarUploadForm(request.POST, request.FILES)
-        if avatar_upload_form.is_valid():
-            avatar = avatar_upload_form.cleaned_data.get('avatar')
-            user_profile = request.user.user_profile
-            user_profile.avatar = avatar
-            user_profile.save()
-        return redirect(reverse('accounts:profile', user_id=request.user.id))
+        print(request.FILES)
+        avatar = request.FILES.get('avatar')
+        user_profile = request.user.user_profile
+        user_profile.avatar = avatar
+        user_profile.save()
+        return JsonResponse({
+            'status': 'ok',
+        })

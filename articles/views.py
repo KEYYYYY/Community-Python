@@ -1,7 +1,6 @@
 import markdown
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import View
 from django.http.response import JsonResponse
@@ -94,7 +93,6 @@ class AddColumnView(LoginRequiredMixin, View):
             })
 
 
-@csrf_exempt
 def upload_image(request):
     """
     文章上传图片视图

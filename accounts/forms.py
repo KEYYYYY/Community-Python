@@ -87,12 +87,3 @@ class UserProfileForm(forms.ModelForm):
     helper.add_input(
         Submit('login', '更新', css_class='btn-primary btn-block')
     )
-
-
-class AvatarUploadForm(forms.ModelForm):
-    """
-    头像上传表单
-    """
-    class Meta:
-        model = UserProfile
-        fields = ('avatar',)
